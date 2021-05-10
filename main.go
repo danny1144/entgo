@@ -5,6 +5,7 @@ import (
 	"ego/ent"
 	"ego/ent/car"
 	"ego/ent/group"
+	"ego/ent/migrate"
 	"ego/ent/user"
 	"fmt"
 	"log"
@@ -15,13 +16,13 @@ import (
 
 func main() {
 
-	client, err := ent.Open("mysql", "gozero:gozero@tcp(localhost:3306)/gozero?parseTime=True")
+	client, err := ent.Open("mysql", "api:123456@tcp(localhost:3306)/api?parseTime=True")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Close()
-
-	if err := client.Schema.Create(context.Background()); err != nil {
+	//可以不生成外键约束
+	if err := client.Schema.Create(context.Background(),migrate.WithForeignKeys(false)); err != nil {
 		log.Fatalf("failed creating schema resources :%v", err)
 	}
 	//创建用户
